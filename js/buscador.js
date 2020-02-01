@@ -188,16 +188,112 @@ function get_autos() {
 
 const autos = get_autos();
 
+//const inputs = document.querySelector("form);
+const allselects = document.querySelectorAll("select");
+
+let search_data = {
+  year: "",
+  marca: "",
+  color: "",
+  minimo: "",
+  maximo: "",
+  puertas: "",
+  transmision: ""
+};
+
+let filtered_autos = [];
+
+const color = document.querySelector("#color");
+color.addEventListener("input", e => {
+  search_data.color = e.target.value;
+  filterAutos();
+});
+const maximo = document.querySelector("#maximo");
+maximo.addEventListener("input", e => {
+  search_data.maximo = Number(e.target.value);
+  filterAutos();
+});
+const minimo = document.querySelector("#minimo");
+minimo.addEventListener("input", e => {
+  search_data.minimo = Number(e.target.value);
+  filterAutos();
+});
+const marca = document.querySelector("#marca");
+marca.addEventListener("input", e => {
+  search_data.marca = e.target.value;
+  filterAutos();
+});
+const year = document.querySelector("#year");
+year.addEventListener("input", e => {
+  search_data.year = Number(e.target.value);
+  filterAutos();
+});
+
+function filterAutos() {
+  const result = get_autos()
+    .filter(filterByColor)
+    .filter(filterByMarca)
+    .filter(filterByYear)
+    .filter(filterByMin)
+    .filter(filterByMax);
+  console.log(result);
+  show_autos(result);
+}
+
+function filterByColor(auto) {
+  console.log(search_data.color);
+  if (search_data.color) {
+    return auto.color === search_data.color;
+  } else {
+    return auto;
+  }
+}
+function filterByMax(auto) {
+  if (search_data.maximo) {
+    return auto.precio <= search_data.maximo;
+  } else {
+    return auto;
+  }
+}
+function filterByMin(auto) {
+  console.log(search_data.minimo);
+  if (search_data.minimo) {
+    return auto.precio >= search_data.minimo;
+  } else {
+    return auto;
+  }
+}
+function filterByMarca(auto) {
+  if (search_data.marca) {
+    return auto.marca === search_data.marca;
+  } else {
+    return auto;
+  }
+}
+function filterByYear(auto) {
+  if (search_data.year) {
+    return auto.year === search_data.year;
+  } else {
+    return auto;
+  }
+}
+
+console.log("----------------");
+
 document.addEventListener("DOMContentLoaded", () => {
   show_autos(autos);
 });
 
 function show_autos(autos) {
   const result = document.querySelector("#resultado");
+  //result.innerHTML = "";
+  while (result.firstChild) {
+    result.removeChild(result.firstChild);
+  }
   autos.forEach(auto => {
     const auto_p = document.createElement("p");
     auto_p.innerHTML = `
-      <p>${auto.marca} ${auto.modelo} ${auto.year} ${auto.precio} ${auto.transmision}</p>
+      <p>${auto.marca} <b>${auto.modelo}</b> ${auto.year} <b>${auto.precio}</b> ${auto.color} ${auto.transmision}</p>
       `;
     result.appendChild(auto_p);
   });
