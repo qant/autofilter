@@ -237,7 +237,11 @@ function filterAutos() {
     .filter(filterByMin)
     .filter(filterByMax);
   console.log(result);
-  show_autos(result);
+  if (result.length) {
+    show_autos(result);
+  } else {
+    NoResults();
+  }
 }
 
 function filterByColor(auto) {
@@ -284,12 +288,26 @@ document.addEventListener("DOMContentLoaded", () => {
   show_autos(autos);
 });
 
-function show_autos(autos) {
+function clearResult() {
   const result = document.querySelector("#resultado");
   //result.innerHTML = "";
   while (result.firstChild) {
     result.removeChild(result.firstChild);
   }
+}
+
+function NoResults() {
+  clearResult();
+  const result = document.querySelector("#resultado");
+  const noresult = document.createElement("div");
+  noresult.appendChild(document.createTextNode("No Results"));
+  noresult.classList.add("alerta", "error");
+  result.appendChild(noresult);
+}
+
+function show_autos(autos) {
+  clearResult();
+  const result = document.querySelector("#resultado");
   autos.forEach(auto => {
     const auto_p = document.createElement("p");
     auto_p.innerHTML = `
